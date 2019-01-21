@@ -1,4 +1,18 @@
-library(stringr)
+#/usr/bin/Rscript
+
+# Function to install packages (if not installed already) and load them
+
+GetPackages <- function(required.packages) {
+  packages.not.installed <- 
+    required.packages[!(required.packages %in% installed.packages()[, "Package"])]
+  if(length(packages.not.installed)){
+    install.packages(packages.not.installed)}
+  lapply(required.packages, require, character.only = TRUE)
+}
+
+# Install and load required packages
+
+GetPackages(c("stringr"))
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -51,5 +65,11 @@ CGH2BEDgraph <- function(input) {
               row.names = F, col.names = F, quote = F, append = F)
 }
 
-CGH2BED(input)
-CGH2BEDgraph(input)
+main <- function(input) {
+  CGH2BED(input)
+  CGH2BEDgraph(input)
+}
+
+if (!interactive()) {
+  main(input)
+}
