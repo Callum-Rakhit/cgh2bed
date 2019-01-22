@@ -18,6 +18,8 @@ args <- commandArgs(trailingOnly = TRUE)
 
 input = args[1]
 
+# This function reformats the input .txt file to the bed format
+
 CGH2BED <- function(input) {
   data <- read.csv(input, header = TRUE,
                  sep = "\t")
@@ -34,6 +36,8 @@ CGH2BED <- function(input) {
   write.table(bed, sep="\t", file = paste("summary.bed"),
            row.names = F, col.names = F, quote = F, append = T)
 }
+
+# This function reformats the input .txt file to three bedgraphs, for LOH, gains and losses 
 
 CGH2BEDgraph <- function(input) {
   data <- read.csv(input, header = TRUE, sep = "\t")
@@ -53,9 +57,13 @@ CGH2BEDgraph <- function(input) {
   bedgraph.Loss <- bedgraph[!(bedgraph$Type == "Loss"),]
   bedgraph.Loss$Type[bedgraph$Type == "Loss"] <- "1"
   
+  # create three bedgraphs
+  
   bedgraph.LOH <- as.data.frame(bedgraph.LOH)
   bedgraph.Gain <- as.data.frame(bedgraph.Gain)
   bedgraph.Loss <- as.data.frame(bedgraph.Loss)
+  
+  # write three tables for LOH, gain and loss
   
   write.table(bedgraph.LOH, sep="\t", file = paste("summary_loh.bedgraph"),
               row.names = F, col.names = F, quote = F, append = F)

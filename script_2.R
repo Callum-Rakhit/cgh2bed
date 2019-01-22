@@ -19,3 +19,4 @@ singlebp2bed <- fucntion(input) {
 if (!interactive()) {
   singlebp2bed(input)
 }
+
