@@ -1,19 +1,29 @@
-# Summarise all chromosomes in one file
+#!/usr/bin/env sh
 
-for file in *.txt; do; Rscript script_1.R "$file" >> summary.txt; done
+main (cutoff) {
 
-# Annotate each base depending with features
+  # Summarise all chromosomes in one file
 
-bedtools genomecov -d -i summary.txt -g hg19.txt > summary_per_base.txt
+  for file in *.txt; do; Rscript script_1.R "$file" >> summary.txt; done
 
-# Filter out bases that don't have more than 100 features
+  # Annotate each base depending with features
 
-awk '(NR>1) && ($3 > 100 ) ' summary_per_base.txt > summary_over_100_as_bed.bed
+  bedtools genomecov -d -i summary.txt -g hg19.txt > summary_per_base.txt
 
-# Merge overlapping regions
+  # Filter out bases that don't have more than 100 features
 
-bedtools merge -i summary_over_100_as_bed.bed -d 5 > merged.txt  # Combine regions that overlap (-d) by 5
+  $a="(NR>1) && ($3 >"$1" ) "  # No spaces allowed in variable declaration (=)
 
-# Covert output back to bed file
+  awk $a summary_per_base.txt > summary_over_100_as_bed.bed
 
-Rscript script_2.R summary.txt > merged.bed
+  # Merge overlapping regions
+
+  bedtools merge -i summary_over_100_as_bed.bed -d 5 > merged.txt  # Combine regions that overlap (-d) by 5
+
+  # Covert output back to bed file
+
+  Rscript script_2.R summary.txt > merged.bed
+
+}
+
+main()
