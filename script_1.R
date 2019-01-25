@@ -57,7 +57,7 @@ CGH2BEDgraph <- function(input) {
   bedgraph.Loss <- bedgraph[!(bedgraph$Type == "Loss"),]
   bedgraph.Loss$Type[bedgraph$Type == "Loss"] <- "1"
   
-  # create three bedgraphs
+  # Covert bedgraphs into data frames
   
   bedgraph.LOH <- as.data.frame(bedgraph.LOH)
   bedgraph.Gain <- as.data.frame(bedgraph.Gain)
