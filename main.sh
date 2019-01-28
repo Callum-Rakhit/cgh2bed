@@ -2,7 +2,7 @@
 
 main () {
   # Covert files to bed format and summarise all chromosomes in one file
-  for file in *.txt; do; Rscript ./script_1.R $file; done
+  for file in *.txt; do Rscript ./script_1.R $file; done
 
   # Annotate each base depending with features
   bedtools genomecov -d -i summary.txt -g hg19.txt > summary_per_base.txt
