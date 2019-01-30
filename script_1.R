@@ -23,7 +23,7 @@ input = args[1]
 CGH2BED <- function(input) {
   data <- read.csv(input, header = TRUE,
                  sep = "\t")
-  
+  ls 
   # data <- read.csv("~/Desktop/CGH_machine_output/ch1.txt", 
   #                  header = TRUE, sep = "\t")
   

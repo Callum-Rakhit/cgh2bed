@@ -34,7 +34,9 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 
-# Test bash file
+# Test bash file/txt and bed files
 *test.sh
 *test*
+*.txt
+*.bed
 
