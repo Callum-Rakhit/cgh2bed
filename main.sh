@@ -17,17 +17,17 @@ awk -v OFS='\t' '{print $1, $3}' summary_merged.bed > summary_merged_genome.bed
 # Annotate each base depending with features
 # This works by looking at the chrosome number and the crawling through each base up to the number
 # in the first column, e.g. chr1 100 would be 1:100 for chr1. Must be tab deliminated.
-
 # -dz only non-zero coverage reported
-# -bg report in bedgraph format
+# -bg report in bedgraph format, only report non-zero
+# -d report at every base
 
-bedtools genomecov -d -i summary_sorted.bed -g summary_merged_genome.bed > summary_per_base.txt
+bedtools genomecov -bg -i summary_sorted.bed -g summary_merged_genome.bed > summary_per_base_bedgraph.bed
+
+# Covert output back to bed file using an R script
+# Rscript ./script_2.R summary_per_base_bedgraph.txt > summary_per_base_bedgraph.bed
 
 # Select bases with than 0 features (can change this to whatever cutoff needed)
-awk '(NR>1) && ($3>0)' summary_per_base.txt > summary_non_zero.txt
-  
-# Covert output back to bed file using an R script
-Rscript ./script_2.R summary_over_10.txt > summary_over_10.bed
-  
+awk '(NR>1) && ($4>10)' summary_per_base_bedgraph.bed > summary_over_10.bed
+
 # Merge overlapping regions, combine regions that overlap (-d) by 2
-bedtools merge -i summary_over_50.bed -d 2 > merged_50.bed
+bedtools merge -i summary_over_10.bed -d 2 > merged_over_10.bed
