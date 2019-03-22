@@ -38,8 +38,6 @@ CGH2BED <- function(input) {
            row.names = F, col.names = F, quote = F, append = T)
 }
 
-CGH2BED(input)
-
 # This function reformats the input .txt file to three bedgraphs, for LOH, gains and losses 
 
 CGH2BEDgraph <- function(input) {

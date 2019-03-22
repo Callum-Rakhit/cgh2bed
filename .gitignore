@@ -40,3 +40,10 @@ vignettes/*.pdf
 *.txt
 *.bed
 
+# VCF files and other irrelevant files
+*.vcf
+*.bed
+*.gz
+*.tbi
+
+
