@@ -77,7 +77,8 @@ for i in *.vcf; do cat ${i} >> collated_vcf.vcf; done
 #  1Mbformost_0.5forsome_plusC19M_1.bed
 
 # convert vcf into a bed
-awk '{print $1, $2, $2+1, $3"_"$8}' collated_vcf.vcf >> collated_bed.bed
+# awk '{print $1, $2, $2+1, $3"_"$8}' collated_vcf.vcf >> collated_bed.bed
+awk '{print $1, $2, $2+1, $3}' collated_vcf.vcf >> collated_bed.bed
 
 # Change whitespace to tab
 sed -i.bak 's/ /\t/g' collated_bed.bed
@@ -88,12 +89,25 @@ sortBed -i collated_bed.bed > collated_sorted_bed.bed
 # Merge the bedtools regions based on overlap, save the features in the fourth column
 bedtools merge -i collated_sorted_bed.bed -d 100 -c 4 -o collapse -delim "|" > collated_sorted_merged_bed.bed
 
+# Filter based on the key regions of the test directory
+bedtools intersect -a regions_0.5Mb_unique.bed -b targets_0.5Mb.bed > ./regions_0.5Mb_key_unique.bed
+
+# Merge the three bed files
+cat regions_0.5Mb_key_unique.bed regions_1Mb_unique.bed regions_miRNA.bed > 1Mbformost_0.5forsome_plusC19M_unique.bed
+sortBed -i 1Mbformost_0.5forsome_plusC19M_unique.bed > 1Mbformost_0.5forsome_plusC19M_unique1.bed
+bedtools merge -i 1Mbformost_0.5forsome_plusC19M_unique1.bed -d 100 -c 4 -o collapse -delim "|" > 1Mbformost_0.5forsome_plusC19M_unique.bed
+
 ##########################
 # Calculating uniqueness #
 ##########################
 
+# Download the uniqueness bed track from UCSC
+
+
+# Filter based on the gnomAD SNPs we have
+
 # Copy column 4
-awk '{print $4}' < no_header_wholegenome_AF_PASS_SNP_filtered.bed | paste unique_scored_SNPs.bed - >  unique_scored_SNPs_5cols.bed
+awk '{print $4}' < no_header_wholegenome_AF_PASS_SNP_filtered.bed | paste unique_scored_SNPs.bed - >unique_scored_SNPs_5cols.bed
 
 # Remove all unique scores under 0.5
 awk '{ if ($4 > 0.6) { print } }' unique_scored_SNPs_5cols.bed > perfectly_unique_SNPs.bed
